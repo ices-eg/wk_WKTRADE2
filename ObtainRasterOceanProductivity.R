@@ -22,12 +22,12 @@
  library(raster)
 
  # JRC data available for 2009-2016
- shape_file_name <- "OPFish_2016_europe"
+ raster_file_name <- "OPFish_2016_europe"
 
 
  # read raster with data to be extracted
  rstr <- raster(file.path(dataPath, "ShapeFiles", "JRC", "OPFish_LPUE_LA_EF_Ratio_2009-2016_NEAtlantic_0417deg_GeoTif", 
-                "OUTPUT_GIS", paste0(shape_file_name, ".tif") ))
+                "OUTPUT_GIS", paste0(raster_file_name, ".tif") ))
  rstr[1:2]
  rstr[1:3,1:3, drop=FALSE]
 
