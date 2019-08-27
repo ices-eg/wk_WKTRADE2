@@ -162,21 +162,22 @@ function (pnts, cols = heat.colors(100), limits = c(0, 1), title = "Legend", leg
        
        
     
-     if(export_raster){
+     if(export_raster && in_relative==FALSE){
        require(raster) 
-       r           <- raster(xmn=xlims[1], xmx=xlims[2], ymn=ylims[1], ymx=ylims[2], res=c(grid_degrees/2, grid_degrees/2),
+       r           <- raster(xmn=xlims[1], xmx=xlims[2], ymn=ylims[1], ymx=ylims[2], res=c(grid_degrees, grid_degrees),
                              crs=CRS("+proj=longlat +datum=WGS84"))
        some_coords <- SpatialPoints(cbind(lon=my_data$mid_lon, lat=my_data$mid_lat))
-       rstr        <- rasterize(x=some_coords, y=r, field=my_data[,nametype], fun=sum) 
+       rstr        <- rasterize(x=some_coords, y=r, field=my_data[,nametype], fun=sum, na.rm=TRUE) 
     
        crs(rstr) <- "+proj=longlat +datum=WGS84"                
        a_crs="+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs"
        rstr_proj       <- projectRaster(rstr, crs=a_crs)  # e.g. European EEA projection
-       rstr_proj[is.na(rstr_proj)] <- -999  # arbitrary code, to get rid of true 0s in GIS
-       rstr_proj[rstr_proj< the_breaks_baseline[1]] <- the_breaks_baseline[1]
-       for(int in 1: length(the_breaks_baseline[-1])) {
-            rstr_proj[rstr_proj>the_breaks_baseline[int] & rstr_proj<the_breaks_baseline[int+1]]  <- the_breaks_baseline[int+1]
-       }
+       #rstr_proj[is.na(rstr_proj)] <- -999  # arbitrary code, to get rid of true 0s in GIS
+       #reclassify if needed
+       #rstr_proj[rstr_proj< the_breaks_baseline[1]] <- the_breaks_baseline[1]
+       #for(int in 1: length(the_breaks_baseline[-1])) {
+       #     rstr_proj[rstr_proj>the_breaks_baseline[int] & rstr_proj<the_breaks_baseline[int+1]]  <- the_breaks_baseline[int+1]
+       #}
        namefile_gtiff= file.path(outPath, paste0("map_averaged_",nametype,"_", plotid,"_", sce))
        writeRaster(rstr_proj, namefile_gtiff, format = "GTiff", overwrite=TRUE)
      }
@@ -319,21 +320,23 @@ function (pnts, cols = heat.colors(100), limits = c(0, 1), title = "Legend", leg
      
   
         # export a raster
-       if(export_raster){
+       if(export_raster && in_relative==FALSE){
+     
         require(raster) 
-        r           <- raster(xmn=xlims[1], xmx=xlims[2], ymn=ylims[1], ymx=ylims[2], res=c(grid_degrees/2, grid_degrees/2),
+        r           <- raster(xmn=xlims[1], xmx=xlims[2], ymn=ylims[1], ymx=ylims[2], res=c(grid_degrees, grid_degrees),
                              crs=CRS("+proj=longlat +datum=WGS84"))
         some_coords <- SpatialPoints(cbind(lon=my_data$mid_lon, lat=my_data$mid_lat))
-        rstr        <- rasterize(x=some_coords, y=r, field=my_data[,nametype], fun=sum) 
-    
+        rstr        <- rasterize(x=some_coords, y=r, field=my_data[,nametype], fun=sum, na.rm=TRUE) 
+   
         crs(rstr) <- "+proj=longlat +datum=WGS84"                
         a_crs="+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs"
         rstr_proj       <- projectRaster(rstr, crs=a_crs)  # e.g. European EEA projection
-        rstr_proj[is.na(rstr_proj)] <- -999  # arbitrary code, to get rid of true 0s in GIS
-        rstr_proj[rstr_proj< the_breaks[1]] <- the_breaks[1]
-        for(int in 1: length(the_breaks[-1])) {
-            rstr_proj[rstr_proj>the_breaks[int] & rstr_proj<the_breaks[int+1]]  <- the_breaks[int+1]
-        }
+        #rstr_proj[is.na(rstr_proj)] <- -999  # arbitrary code, to get rid of true 0s in GIS
+        # classify:
+        #rstr_proj[rstr_proj< the_breaks[1]] <- the_breaks[1]
+        #for(int in 1: length(the_breaks[-1])) {
+        #    rstr_proj[rstr_proj>the_breaks[int] & rstr_proj<the_breaks[int+1]]  <- the_breaks[int+1]
+        #}
         namefile_gtiff= file.path(outPath, paste0("map_averaged_",nametype,"_", plotid,"_", sce))
         writeRaster(rstr_proj, namefile_gtiff, format = "GTiff", overwrite=TRUE)
        }    

@@ -68,6 +68,7 @@
  rstr_future[1:3,1:3, drop=FALSE]
 
  plot(rstr_future)
+ plot(rstr_future, breaks=c(-1,1,2,3,4,6,8,11,15,20,27,10000), col=terrain.colors(13))
 
 
  # Step C -  Raster algebra
