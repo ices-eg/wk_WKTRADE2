@@ -11,8 +11,9 @@
  mainPath    <- file.path("D:","FBA","ADVICES", "ICES_WKTRADE2") 
  repoPath    <- file.path(mainPath, "wk_WKTRADE2") # github repo
  dataPath    <- file.path(repoPath, "WKTRADE2_Data")
- outPath     <- file.path(dataPath, "ShapeFiles", "WKTRADE2")
+ outPath     <- file.path(dataPath, "WKTRADE2_Outputs", "ShapeFiles")
 
+ 
  dir.create(file.path(outPath))
 
  library(maptools)

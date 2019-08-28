@@ -10,10 +10,9 @@
  polPath     <- file.path(repoPath, "WKTRADE2_Data","ShapeFiles")
  dataPath1   <- file.path(repoPath, "WKTRADE2_Data") # path to current spatial effort allocation 
  dataPath2   <- file.path(repoPath, "WKTRADE2_Data","ShapeFiles","DISPLACE_outputs", "BalticSea") # path to future spatial effort allocation
- outPath     <- file.path(dataPath, "ICES_WKTRADE2","WKTRADE2_Outputs")
+ outPath     <- file.path(repoPath, "WKTRADE2_Data","ShapeFiles", "WKTRADE2")
 
  dir.create(file.path(outPath))
- dir.create(file.path(outPath, "ShapeFiles"))
 
  # import fishing effort at t+1 predicted from DISPLACE or SMART
  # and find the reciprocal to identify what cells to restrict......
@@ -24,12 +23,12 @@
  # only point 1 is demonstrated here.
  
  #!!!!!!!!!!!!!!!!!!!!!!!!!#
- shape_file_name   <- "HELCOM_intensity_Otter_2016" 
- yfield            <- 'MidLat'
- xfield            <- 'MidLon'
- grid_degrees      <- 0.1 
- raster_file_name  <- "map_averaged_cumftime_2_scerestrictionontrawling5eez" # ...one sce
- shape_file_out    <- paste(raster_file_name, "_proba") 
+ shape_file_name        <- "HELCOM_intensity_Otter_2016" 
+ yfield                 <- 'MidLat'
+ xfield                 <- 'MidLon'
+ grid_degrees           <- 0.1 
+ raster_file_name       <- "map_averaged_cumftime_2_scerestrictionontrawling5eez" # ...one sce
+ raster_file_name_out   <- "effortForecast_1" 
  #!!!!!!!!!!!!!!!!!!!!!!!!!#
 
 
@@ -69,8 +68,12 @@
 
  plot(rstr_future)
  plot(rstr_future, breaks=c(-1,1,2,3,4,6,8,11,15,20,27,10000), col=terrain.colors(13))
+ plot(rstr_future[rstr_future>1 & rstr_future<summary(rstr_future)["Max.",], drop=FALSE], breaks=c(-1,1,2,3,4,6,8,11,15,20,27,10000), col=terrain.colors(13))
 
+ # get rid of irrelevant cells
+ rstr_future <- rstr_future[rstr_future>1 & rstr_future<summary(rstr_future)["Max.",], drop=FALSE]
 
+ 
  # Step C -  Raster algebra
  # first harmonize raster resolutions
  res(rstr_current)
@@ -84,26 +87,45 @@
  # then normalize to similar values
  normalized_rstr_current <- rstr_current/cellStats(rstr_current, 'sum')
  normalized_rstr_future  <- rstr_future/cellStats(rstr_future, 'sum')
+ par(mfrow=c(1,2))
+ plot(normalized_rstr_current, breaks=c(0,0.001,0.002,0.004,0.008,0.016,1), col=terrain.colors(8))
+ plot(normalized_rstr_future, breaks=c(0,0.001,0.002,0.004,0.008,0.016,1), col=terrain.colors(8))
  
  # clip the current with the future
  normalized_rstr_current <- crop(normalized_rstr_current, normalized_rstr_future)
 
  # finally, do the algebra
- areas_to_restrict <- normalized_rstr_current - normalized_rstr_future 
- areas_to_restrict <- areas_to_restrict[areas_to_restrict>0, drop=FALSE]
- areas_to_restrict <- areas_to_restrict/cellStats(areas_to_restrict, 'sum') # normalize to 1
+ areas_to_go_in_future       <- normalized_rstr_current * normalized_rstr_future 
+ areas_to_go_in_future       <- areas_to_go_in_future[areas_to_go_in_future>0, drop=FALSE]
  
- par(mfrow=c(1,2))
- plot(normalized_rstr_current)
- plot(areas_to_restrict)
+ # normalize to 1 and therefore get a allocation key for total effort if necessary
+ areas_to_go_in_future       <- areas_to_go_in_future/cellStats(areas_to_go_in_future, 'sum') 
+ 
+ 
+# export the raster in outPath
+ writeRaster(areas_to_go_in_future, file = file.path(outPath, 
+                                paste0(raster_file_name_out,".tif")), format = "GTiff", overwrite = TRUE)
+
+ 
+
+
+ # NOT USED:
+ # but if we want to inform  ObtainProbabilityFieldForEffortDisplacement.R we need the dual layer
+ # (the closer the value to 1, the more likely the cell to be cut...)
+ #areas_to_restrict <- 1- areas_to_go_in_future
+ 
+ 
+ #par(mfrow=c(1,2))
+ #plot(normalized_rstr_current) # current
+ #plot(areas_to_restrict)       # suggested restriction as a spatial weighting factor 
  
  # Step D -  Export
  # convert to shape file
- areas_to_restrict_shp <- ##TODO 
- 
+ #areas_to_restrict_shp <- rasterToPolygons(areas_to_restrict, dissolve=TRUE)
+ #head(areas_to_restrict_shp@data)
+  
  # finally, export the proba field for future use 
- # export augmented shp 
- writeOGR(areas_to_restrict_shp, file.path(outPath, shape_file_name_out), "SHP", driver="ESRI Shapefile")
+ #writeOGR(areas_to_restrict_shp, file.path(outPath, paste0(shape_file_name_out,".shp")), "SHP", driver="ESRI Shapefile")
 
  #pblm of abbreviating the field names
  # shp2  <- readOGR(file.path(outPath, shape_file_name_out))
