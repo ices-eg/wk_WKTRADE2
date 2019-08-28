@@ -28,7 +28,7 @@
  xfield                 <- 'MidLon'
  grid_degrees           <- 0.1 
  raster_file_name       <- "map_averaged_cumftime_2_scerestrictionontrawling5eez" # ...one sce
- raster_file_name_out   <- "effortForecast_1" 
+ raster_file_name_out   <- "01_raster_effort_forecast" 
  #!!!!!!!!!!!!!!!!!!!!!!!!!#
 
 

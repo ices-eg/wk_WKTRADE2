@@ -116,3 +116,12 @@ Economics_fs <- rbind(IRL_fleet) #, DNK_fleet, EST_fleet, FIN_fleet, LAT_fleet, 
 write.table(Economics_fs, file =file.path(dataPath, "STECF", "Economics_fs.csv"), sep=";",row.names=F,col.names=T, quote=FALSE)
 
 
+
+
+
+ # export the raster in outPath
+ writeRaster(rstr, file = file.path(outPath, 
+                                paste0("05_rstr_gva.tif")), format = "GTiff", overwrite = TRUE)
+
+
+

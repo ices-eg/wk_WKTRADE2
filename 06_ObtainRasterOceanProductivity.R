@@ -35,3 +35,10 @@
 
  #see OPFish_Workshop_05-2019_v4_final.pdf for description 
  
+ 
+ # export the raster in outPath
+ writeRaster(rstr, file = file.path(outPath, 
+                                paste0("06_rstr_oceanproductivityfish.tif")), format = "GTiff", overwrite = TRUE)
+
+ 
+ 

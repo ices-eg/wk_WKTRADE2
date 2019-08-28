@@ -36,6 +36,10 @@
  # export the layer and use in AddAttributeToShpFromRasterExtractorFromShpOverlay.R
 
 
+ # export the raster in outPath
+ writeRaster(rstr, file = file.path(outPath, 
+                                paste0("04_rstr_expectedprofit.tif")), format = "GTiff", overwrite = TRUE)
+
 
 
 

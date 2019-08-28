@@ -137,7 +137,7 @@
 
  # export the raster in outPath
  writeRaster(dist_raster, file = file.path(outPath, 
-                                paste0("rstr_dist_to_coast_",a_region,".tif")), format = "GTiff", overwrite = TRUE)
+                                paste0("02_raster_dist_to_coast_",a_region,".tif")), format = "GTiff", overwrite = TRUE)
 
 
  

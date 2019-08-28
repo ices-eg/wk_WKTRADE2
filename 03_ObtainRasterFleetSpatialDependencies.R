@@ -88,11 +88,11 @@
 
  # export the raster in outPath
  writeRaster(rstr1, file = file.path(outPath, 
-                                paste0("rstr_spatialdependencyindex1.tif")), format = "GTiff", overwrite = TRUE)
+                                paste0("03_rstr_spatialdependencyindex1.tif")), format = "GTiff", overwrite = TRUE)
  writeRaster(rstr2, file = file.path(outPath, 
-                                paste0("rstr_spatialdependencyindex2.tif")), format = "GTiff", overwrite = TRUE)
+                                paste0("03_rstr_spatialdependencyindex2.tif")), format = "GTiff", overwrite = TRUE)
  writeRaster(rstr3, file = file.path(outPath, 
-                                paste0("rstr_spatialdependencyindex3.tif")), format = "GTiff", overwrite = TRUE)
+                                paste0("03_rstr_spatialdependencyindex3.tif")), format = "GTiff", overwrite = TRUE)
  
          
            
