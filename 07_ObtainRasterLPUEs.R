@@ -20,7 +20,7 @@
  yfield            <- 'MidLat'
  xfield            <- 'MidLon'
  grid_degrees      <- 0.05
- shape_file_out    <- "HELCOM_intensity_Otter_2016_04"
+ rstr_name_out     <- "07_rstr_vpue"
  #!!!!!!!!!!!!!!!!!!!!!!!!!#
 
 
@@ -69,5 +69,5 @@
 
  # export the raster in outPath
  writeRaster(rstr, file = file.path(outPath, 
-                                paste0("07_rstr_vpue.tif")), format = "GTiff", overwrite = TRUE)
+                                paste0(rstr_name_out,".tif")), format = "GTiff", overwrite = TRUE)
  
