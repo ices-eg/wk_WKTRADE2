@@ -85,7 +85,7 @@
 
 
  # finally, export the proba field for future use 
- # in SelectPolygonsToRestrictFromStaticView.R as the input variable
+ # in SelectPolygonsToRestrictFromAugmentedShp.R as the input variable
   # export augmented shp 
  writeOGR(shp, file.path(outPath, shape_file_name_out), "SHP", driver="ESRI Shapefile")
 

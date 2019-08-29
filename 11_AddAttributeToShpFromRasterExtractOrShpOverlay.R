@@ -142,25 +142,61 @@
  AddAttributeToShpFromRasterExtract (shape_file_name     = file.path(dataPath, "ShapeFiles", "WGSFD", "HELCOM_intensity_Otter_2016.shp"), 
                                      yfield              = 'MidLat',
                                      xfield              = 'MidLon',
-                                     raster_file_name    = file.path(dataPath, "ShapeFiles","WKTRADE2", "rstr_dist_to_coast_BalticSeaWide.tif"),
-                                     namevar             = "dist2Coast",
-                                     shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_01.shp"))
-                                     
+                                     raster_file_name    = file.path(dataPath, "ShapeFiles","WKTRADE2", "01_raster_effort_forecast.tif"),
+                                     namevar             = "effcast",
+                                     shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_02.shp"))
+
+
  # tool chain on previous...
- AddAttributeToShpFromRasterExtract (shape_file_name     = file.path(outPath, "HELCOM_intensity_Otter_2016_01.shp"), 
+ AddAttributeToShpFromRasterExtract (shape_file_name     = file.path(dataPath, "ShapeFiles", "WGSFD", "HELCOM_intensity_Otter_2016_01.shp"), 
                                      yfield              = 'MidLat',
                                      xfield              = 'MidLon',
-                                     raster_file_name    = file.path(dataPath, "ShapeFiles", "JRC", "OPFish_LPUE_LA_EF_Ratio_2009-2016_NEAtlantic_0417deg_GeoTif", 
-                                                             "OUTPUT_GIS", paste0("OPFish_2016_europe.tif")),
-                                     namevar             = "OP2016",
+                                     raster_file_name    = file.path(dataPath, "ShapeFiles","WKTRADE2", "02_rstr_dist_to_coast_BalticSeaWide.tif"),
+                                     namevar             = "dist2Coast",
                                      shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_02.shp"))
+                                     
+ 
+  # tool chain on previous...
+ AddAttributeToShpFromRasterExtract (shape_file_name     = file.path(outPath, "HELCOM_intensity_Otter_2016_02.shp"), 
+                                     yfield              = 'MidLat',
+                                     xfield              = 'MidLon',
+                                     raster_file_name    = file.path(dataPath, "ShapeFiles","WKTRADE2", "03_rstr_spatialdependencyindex1.tif"),
+                                     namevar             = "Depend1",
+                                     shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_03.shp"))
+ 
+
+ # tool chain on previous...
+ AddAttributeToShpFromRasterExtract (shape_file_name     = file.path(outPath, "HELCOM_intensity_Otter_2016_03.shp"), 
+                                     yfield              = 'MidLat',
+                                     xfield              = 'MidLon',
+                                     raster_file_name    = file.path(dataPath, "ShapeFiles","WKTRADE2", "04_rstr_expectedprofit.tif"),
+                                     namevar             = "profit",
+                                     shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_04.shp"))
+ 
  
  # tool chain on previous...
- AddAttributeToShpFromShpOverlay (shape_file_name1     = file.path(outPath, "HELCOM_intensity_Otter_2016_02.shp"), 
+ AddAttributeToShpFromRasterExtract (shape_file_name     = file.path(outPath, "HELCOM_intensity_Otter_2016_04.shp"), 
+                                     yfield              = 'MidLat',
+                                     xfield              = 'MidLon',
+                                     raster_file_name    = file.path(dataPath, "ShapeFiles","WKTRADE2", "06_rstr_oceanproductivityfish.tif"),
+                                     namevar             = "OP2016",
+                                     shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_05.shp"))
+ 
+ 
+ # tool chain on previous...
+ AddAttributeToShpFromRasterExtract (shape_file_name     = file.path(outPath, "HELCOM_intensity_Otter_2016_05.shp"), 
+                                     yfield              = 'MidLat',
+                                     xfield              = 'MidLon',
+                                     raster_file_name    = file.path(dataPath, "ShapeFiles","WKTRADE2", "06_rstr_oceanproductivityfish.tif"),
+                                     namevar             = "OP2016",
+                                     shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_06.shp"))
+ 
+ # tool chain on previous...
+ AddAttributeToShpFromShpOverlay (shape_file_name1     = file.path(outPath, "HELCOM_intensity_Otter_2016_06.shp"), 
                                              yfield              = 'MidLat',
                                              xfield              = 'MidLon',
                                              shape_file_name2    = file.path(dataPath, "ShapeFiles","EMODNET", "EUNIS_codes_Combined_ICES_FAO9_clipped.shp"),
                                              namevar             = "hab_code",
-                                             shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_03.shp"))
+                                             shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_07.shp"))
 
 

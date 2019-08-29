@@ -1,5 +1,48 @@
+ ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
+ ## Retrieve GVA per fleet-segment from STECF AER data
+ ## and assign to fleet-segment-specific VMS shape layers (from WGSFD or finer), 
+ ## then get raster files
+ 
+ ## Developed for WKTRADE2, Aug 2019
 
-  
+ ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
+ ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
+
+
+  mainPath    <- file.path("D:","FBA","ADVICES", "ICES_WKTRADE2") 
+  repoPath    <- file.path(mainPath, "wk_WKTRADE2") # github repo
+  dataPath    <- file.path(repoPath, "WKTRADE2_Data")
+  outPath     <- file.path(dataPath, "ShapeFiles", "WKTRADE2")
+
+  dir.create(file.path(outPath))
+
+
+ #!!!!!!!!!!!!!!!!!!!!!!!!!#
+ shape_file_name   <- "HELCOM_intensity_Otter_2016" 
+ yfield            <- 'MidLat'
+ xfield            <- 'MidLon'
+ shape_file_out    <- "HELCOM_intensity_Otter_2016_05"
+ #!!!!!!!!!!!!!!!!!!!!!!!!!#
+
+
+ 
+ library(maptools)
+ library(rgdal)
+ library(raster)
+
+
+ # read shape file
+ shp  <- readOGR(file.path(dataPath,  "ShapeFiles", "WGSFD", paste0(shape_file_name,".shp") ))
+ if(is.na( projection(shp))) projection(shp) <- CRS("+proj=longlat +datum=WGS84")   # a guess!
+
+ head(shp@data)
+
+
+ ##TODO
+ 
+ 
+
+ ## maybe start from helpful piece of code dealing with STECF AER data: 
 library(readxl)
 library(dplyr)
 IRL <- read_excel(file.path(dataPath, "STECF", "2018-07_STECF 18-07 - EU Fleet Economic and Transversal data_fs level_final", "IRL.xlsx"))   # extracted from pivot_economic  IRL

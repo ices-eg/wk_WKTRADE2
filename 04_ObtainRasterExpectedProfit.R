@@ -1,7 +1,7 @@
+##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
  ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
- ## Retrieve GVA per fleet-segment from STECF AER data
- ## and assign to fleet-segment-specific VMS shape layers (from WGSFD or finer), 
- ## then get raster files
+ ## Retrieve an expected profit on spatial zones based on various assumptions
+  ## then get raster files
  
  ## Developed for WKTRADE2, Aug 2019
 
@@ -17,6 +17,29 @@
  dir.create(file.path(outPath))
 
 
+ #!!!!!!!!!!!!!!!!!!!!!!!!!#
+ shape_file_name   <- "HELCOM_intensity_Otter_2016" 
+ yfield            <- 'MidLat'
+ xfield            <- 'MidLon'
+ shape_file_out    <- "HELCOM_intensity_Otter_2016_04"
+ #!!!!!!!!!!!!!!!!!!!!!!!!!#
+
+
+ 
+ library(maptools)
+ library(rgdal)
+ library(raster)
+
+
+ # read shape file
+ shp  <- readOGR(file.path(dataPath,  "ShapeFiles", "WGSFD", paste0(shape_file_name,".shp") ))
+ if(is.na( projection(shp))) projection(shp) <- CRS("+proj=longlat +datum=WGS84")   # a guess!
+
+ head(shp@data)
+
+
+ ##TODO:
+ 
  # read the WGSFD layers for spatial value
  
 
@@ -34,9 +57,6 @@
  
  
  # export the layer and use in AddAttributeToShpFromRasterExtractorFromShpOverlay.R
-
-
- # export the raster in outPath
  writeRaster(rstr, file = file.path(outPath, 
                                 paste0("04_rstr_expectedprofit.tif")), format = "GTiff", overwrite = TRUE)
 

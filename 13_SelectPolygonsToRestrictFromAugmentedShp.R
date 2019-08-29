@@ -1,7 +1,7 @@
 ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
 ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
 ## Select areas to restrict to fishing based on various criteria and % thresholds
-## e.g. thresholds on historical catch volume, effort or lpues
+## e.g. thresholds on historical catch volume, feffort, lpues etc.
 
 ## Developed for WKTRADE2, Aug 2019
 ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
