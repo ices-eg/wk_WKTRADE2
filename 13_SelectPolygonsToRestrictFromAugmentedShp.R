@@ -11,18 +11,19 @@
  mainPath    <- file.path("D:","FBA","ADVICES", "ICES_WKTRADE2") 
  repoPath    <- file.path(mainPath, "wk_WKTRADE2") # github repo
  dataPath    <- file.path(repoPath, "WKTRADE2_Data","ShapeFiles","WKTRADE2")
- outPath     <- file.path(dataPath, "WKTRADE2_Outputs")
+ outPath     <- file.path(repoPath, "WKTRADE2_Outputs", "Shapefiles")
 
  dir.create(file.path(outPath))
 
 
 
  #!!!!!!!!!!!!!!!!!!!!!!!!!#
- shape_file_name   <- "HELCOM_intensity_Otter_2016_02" 
+ shape_file_name   <- "HELCOM_intensity_Otter_2016_10" 
+ #shape_file_name   <- "HELCOM_intensity_Otter_2016_With_Proba" # alternatively 
  yfield            <- 'MidLat'
  xfield            <- 'MidLon'
  threshold         <- 20
- structuring_var   <- "dist2Coast" # or "feffort", or "VPUE", or the composite "probaField", etc.
+ structuring_var   <- "dist2Coast" # or "feffort", or "vpue", etc. or the composite "proba_cell"
  structuring_var2  <- "hab_code" # or "" or "EEZ", etc.
  cut_away_the      <- "largest" # e.g. lowest if feffort, largest if dist2Coast etc.
  cut_away_on       <- "nb_of_cells"  # or "values"
@@ -100,6 +101,7 @@
  spdf_opened_cells_diss <- unionSpatialPolygons(spdf_opened_cells, ID=rep(1, length(spdf_opened_cells)))
  projection(spdf_opened_cells_diss) <- CRS("+proj=longlat +datum=WGS84")
  
+ par(mfrow=c(1,1))
  plot(shp)
  plot(spdf_closed_cells_diss, add=TRUE, col=2, border="red")   # check
  plot(spdf_opened_cells_diss, add=TRUE, col=3, border="green")   # check
@@ -107,6 +109,7 @@
  map(add=TRUE, fill=TRUE, col=grey(0.5))
  box()
  axis(1) ; axis(2, las=2)
+ title(paste("Cut with threshold", threshold, "% on", structuring_var))
  
  # export a plot on the fly
  namefile <- paste0("cut_per_overall_", threshold, "_and_dual")

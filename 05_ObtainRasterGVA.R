@@ -22,6 +22,7 @@
  yfield            <- 'MidLat'
  xfield            <- 'MidLon'
  shape_file_out    <- "HELCOM_intensity_Otter_2016_05"
+ grid_degrees      <- 0.1
  #!!!!!!!!!!!!!!!!!!!!!!!!!#
 
 
@@ -161,7 +162,21 @@ write.table(Economics_fs, file =file.path(dataPath, "STECF", "Economics_fs.csv")
 
 
 
+ 
+ # FAKE EXPORT FOR NOW:
 
+
+ # convert to raster
+ r           <- raster(xmn=bbox(shp)[1,1], xmx=bbox(shp)[1,2], ymn=bbox(shp)[2,1], ymx=bbox(shp)[2,2], res=c(grid_degrees, grid_degrees),
+                             crs=CRS("+proj=longlat +datum=WGS84"))
+ some_coords <- SpatialPoints(cbind(lon=shp@data$MidLon, lat=shp@data$MidLat))
+ rstr        <- rasterize(x=some_coords, y=r, field=shp@data$FishingH, fun=sum) 
+    
+ crs(rstr) <- "+proj=longlat +datum=WGS84"                
+
+ plot(rstr)
+
+ 
  # export the raster in outPath
  writeRaster(rstr, file = file.path(outPath, 
                                 paste0("05_rstr_gva.tif")), format = "GTiff", overwrite = TRUE)

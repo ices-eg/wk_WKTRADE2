@@ -34,7 +34,7 @@
                                                 xfield              = 'MidLon',
                                                 raster_file_name    = file.path(dataPath, "ShapeFiles","WKTRADE2", "rstr_dist_to_coast_BalticSeaWide.tif"),
                                                 namevar             = "dist2Coast",
-                                                shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_01.shp"))
+                                                shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_01.shp")
  ){
   
  # read shape file
@@ -144,11 +144,15 @@
                                      xfield              = 'MidLon',
                                      raster_file_name    = file.path(dataPath, "ShapeFiles","WKTRADE2", "01_raster_effort_forecast.tif"),
                                      namevar             = "effcast",
-                                     shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_02.shp"))
+                                     shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_01.shp"))
+
+ # quick check
+ shp  <- readOGR(file.path(outPath, "HELCOM_intensity_Otter_2016_01.shp" ))
+ head(shp@data)
 
 
  # tool chain on previous...
- AddAttributeToShpFromRasterExtract (shape_file_name     = file.path(dataPath, "ShapeFiles", "WGSFD", "HELCOM_intensity_Otter_2016_01.shp"), 
+ AddAttributeToShpFromRasterExtract (shape_file_name     = file.path(outPath, "HELCOM_intensity_Otter_2016_01.shp"), 
                                      yfield              = 'MidLat',
                                      xfield              = 'MidLon',
                                      raster_file_name    = file.path(dataPath, "ShapeFiles","WKTRADE2", "02_rstr_dist_to_coast_BalticSeaWide.tif"),
@@ -156,7 +160,11 @@
                                      shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_02.shp"))
                                      
  
-  # tool chain on previous...
+ # quick check
+ shp  <- readOGR(file.path(outPath, "HELCOM_intensity_Otter_2016_02.shp" ))
+ head(shp@data)
+
+ # tool chain on previous...
  AddAttributeToShpFromRasterExtract (shape_file_name     = file.path(outPath, "HELCOM_intensity_Otter_2016_02.shp"), 
                                      yfield              = 'MidLat',
                                      xfield              = 'MidLon',
@@ -164,6 +172,11 @@
                                      namevar             = "Depend1",
                                      shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_03.shp"))
  
+
+  # quick check
+ shp  <- readOGR(file.path(outPath, "HELCOM_intensity_Otter_2016_03.shp" ))
+ head(shp@data)
+
 
  # tool chain on previous...
  AddAttributeToShpFromRasterExtract (shape_file_name     = file.path(outPath, "HELCOM_intensity_Otter_2016_03.shp"), 
@@ -174,15 +187,23 @@
                                      shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_04.shp"))
  
  
+ # quick check
+ shp  <- readOGR(file.path(outPath, "HELCOM_intensity_Otter_2016_04.shp" ))
+ head(shp@data)
+
  # tool chain on previous...
  AddAttributeToShpFromRasterExtract (shape_file_name     = file.path(outPath, "HELCOM_intensity_Otter_2016_04.shp"), 
                                      yfield              = 'MidLat',
                                      xfield              = 'MidLon',
-                                     raster_file_name    = file.path(dataPath, "ShapeFiles","WKTRADE2", "06_rstr_oceanproductivityfish.tif"),
-                                     namevar             = "OP2016",
+                                     raster_file_name    = file.path(dataPath, "ShapeFiles","WKTRADE2", "05_rstr_gva.tif"),
+                                     namevar             = "gva",
                                      shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_05.shp"))
  
  
+ # quick check
+ shp  <- readOGR(file.path(outPath, "HELCOM_intensity_Otter_2016_05.shp" ))
+ head(shp@data)
+
  # tool chain on previous...
  AddAttributeToShpFromRasterExtract (shape_file_name     = file.path(outPath, "HELCOM_intensity_Otter_2016_05.shp"), 
                                      yfield              = 'MidLat',
@@ -191,12 +212,73 @@
                                      namevar             = "OP2016",
                                      shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_06.shp"))
  
+ 
+  # quick check
+ shp  <- readOGR(file.path(outPath, "HELCOM_intensity_Otter_2016_06.shp" ))
+ head(shp@data)
+
  # tool chain on previous...
- AddAttributeToShpFromShpOverlay (shape_file_name1     = file.path(outPath, "HELCOM_intensity_Otter_2016_06.shp"), 
+ AddAttributeToShpFromRasterExtract (shape_file_name     = file.path(outPath, "HELCOM_intensity_Otter_2016_06.shp"), 
+                                     yfield              = 'MidLat',
+                                     xfield              = 'MidLon',
+                                     raster_file_name    = file.path(dataPath, "ShapeFiles","WKTRADE2", "07_rstr_lpue.tif"),
+                                     namevar             = "lpue",
+                                     shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_07.shp"))
+ 
+ 
+  # quick check
+ shp  <- readOGR(file.path(outPath, "HELCOM_intensity_Otter_2016_07.shp" ))
+ head(shp@data)
+
+  # tool chain on previous...
+ AddAttributeToShpFromRasterExtract (shape_file_name     = file.path(outPath, "HELCOM_intensity_Otter_2016_07.shp"), 
+                                     yfield              = 'MidLat',
+                                     xfield              = 'MidLon',
+                                     raster_file_name    = file.path(dataPath, "ShapeFiles","WKTRADE2", "07_rstr_vpue.tif"),
+                                     namevar             = "vpue",
+                                     shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_07b.shp"))
+ 
+ 
+  # quick check
+ shp  <- readOGR(file.path(outPath, "HELCOM_intensity_Otter_2016_07b.shp" ))
+ head(shp@data)
+
+   # tool chain on previous...
+ AddAttributeToShpFromRasterExtract (shape_file_name     = file.path(outPath, "HELCOM_intensity_Otter_2016_07b.shp"), 
+                                     yfield              = 'MidLat',
+                                     xfield              = 'MidLon',
+                                     raster_file_name    = file.path(dataPath, "ShapeFiles","WKTRADE2", "08_rstr_windmills.tif"),
+                                     namevar             = "windmills",
+                                     shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_08.shp"))
+ 
+ 
+  # quick check
+ shp  <- readOGR(file.path(outPath, "HELCOM_intensity_Otter_2016_08.shp" ))
+ head(shp@data)
+
+   # tool chain on previous...
+ AddAttributeToShpFromRasterExtract (shape_file_name     = file.path(outPath, "HELCOM_intensity_Otter_2016_08.shp"), 
+                                     yfield              = 'MidLat',
+                                     xfield              = 'MidLon',
+                                     raster_file_name    = file.path(dataPath, "ShapeFiles","WKTRADE2", "09_rstr_mining.tif"),
+                                     namevar             = "mining",
+                                     shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_09.shp"))
+ 
+ 
+  # quick check
+ shp  <- readOGR(file.path(outPath, "HELCOM_intensity_Otter_2016_09.shp" ))
+ head(shp@data)
+
+
+ # tool chain on previous...
+ AddAttributeToShpFromShpOverlay (shape_file_name1     = file.path(outPath, "HELCOM_intensity_Otter_2016_09.shp"), 
                                              yfield              = 'MidLat',
                                              xfield              = 'MidLon',
                                              shape_file_name2    = file.path(dataPath, "ShapeFiles","EMODNET", "EUNIS_codes_Combined_ICES_FAO9_clipped.shp"),
                                              namevar             = "hab_code",
-                                             shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_07.shp"))
+                                             shape_file_name_out = file.path(outPath, "HELCOM_intensity_Otter_2016_10.shp"))
 
 
+   # quick check
+ shp  <- readOGR(file.path(outPath, "HELCOM_intensity_Otter_2016_10.shp" ))
+ head(shp@data)

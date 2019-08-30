@@ -34,6 +34,27 @@
  ##TODO
  # find a data source for sediment or gravel extraction e.g. from WKBEDPRESS
  
+ 
+ 
+ ## FAKE EXPORT FOR NOW:
+
+ # read shape file
+ shp  <- readOGR(file.path(dataPath,  "ShapeFiles", "WGSFD", paste0(shape_file_name,".shp") ))
+ if(is.na( projection(shp))) projection(shp) <- CRS("+proj=longlat +datum=WGS84")   # a guess!
+
+ head(shp@data)
+
+
+# convert to raster
+ r           <- raster(xmn=bbox(shp)[1,1], xmx=bbox(shp)[1,2], ymn=bbox(shp)[2,1], ymx=bbox(shp)[2,2], res=c(grid_degrees, grid_degrees),
+                             crs=CRS("+proj=longlat +datum=WGS84"))
+ some_coords <- SpatialPoints(cbind(lon=shp@data$MidLon, lat=shp@data$MidLat))
+ rstr        <- rasterize(x=some_coords, y=r, field=shp@data$FishingH, fun=sum) 
+    
+ crs(rstr) <- "+proj=longlat +datum=WGS84"                
+
+ plot(rstr)
+
 
 
  # export the raster in outPath

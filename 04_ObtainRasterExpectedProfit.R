@@ -22,6 +22,7 @@
  yfield            <- 'MidLat'
  xfield            <- 'MidLon'
  shape_file_out    <- "HELCOM_intensity_Otter_2016_04"
+ grid_degrees      <- 0.1
  #!!!!!!!!!!!!!!!!!!!!!!!!!#
 
 
@@ -55,6 +56,19 @@
  
  # deduce a probability field for effort at t+1 as expected profit normilized to 1 
  
+ 
+ # FAKE EXPORT FOR NOW:
+ 
+ # convert to raster
+ r           <- raster(xmn=bbox(shp)[1,1], xmx=bbox(shp)[1,2], ymn=bbox(shp)[2,1], ymx=bbox(shp)[2,2], res=c(grid_degrees, grid_degrees),
+                             crs=CRS("+proj=longlat +datum=WGS84"))
+ some_coords <- SpatialPoints(cbind(lon=shp@data$MidLon, lat=shp@data$MidLat))
+ rstr        <- rasterize(x=some_coords, y=r, field=shp@data$FishingH, fun=sum) 
+    
+ crs(rstr) <- "+proj=longlat +datum=WGS84"                
+
+ plot(rstr)
+
  
  # export the layer and use in AddAttributeToShpFromRasterExtractorFromShpOverlay.R
  writeRaster(rstr, file = file.path(outPath, 

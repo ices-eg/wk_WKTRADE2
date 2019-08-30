@@ -10,8 +10,8 @@
 
  mainPath    <- file.path("D:","FBA","ADVICES", "ICES_WKTRADE2") 
  repoPath    <- file.path(mainPath, "wk_WKTRADE2") # github repo
- dataPath    <- file.path(repoPath, "WKTRADE2_Data")
- outPath     <- file.path(dataPath, "WKTRADE2_Outputs", "ShapeFiles")
+ dataPath    <- file.path(repoPath, "WKTRADE2_Data", "ShapeFiles", "WKTRADE2")
+ outPath     <- file.path(repoPath, "WKTRADE2_Outputs", "ShapeFiles")
 
  
  dir.create(file.path(outPath))
@@ -22,32 +22,35 @@
 
 
  #!!!!!!!!!!!!!!!!!!!!!!!!!#
- shape_file_name     <- "HELCOM_intensity_Otter_2016_02" 
+ shape_file_name     <- "HELCOM_intensity_Otter_2016_10" 
  yfield              <- 'MidLat'
  xfield              <- 'MidLon'
  shape_file_name_out <- "HELCOM_intensity_Otter_2016_With_Proba.shp"
- vars                <- c("dist2Coast", "totvalue") # just an example here...
- inverted            <- c(1,0) #  code 0/1 (1 if e.g. dist2coast, 0 if e.g. totvalue)
+ vars                <- c('totvalue', 'effcast','dist2Coast','Depend1','profit','gva','OP2016','lpue','vpue','windmills','mining') # just an example here...
+ inverted            <- c(0,           0,            1,          0,         0,     0,     0,      0,     0,      0,          0) #  code 0/1 (1 if e.g. dist2coast, 0 if e.g. totvalue)
+ if(length(inverted)!=length(vars)) stop()
  #!!!!!!!!!!!!!!!!!!!!!!!!!#
 
   
  # read shape file
- shp  <- readOGR(file.path(outPath, paste0(shape_file_name,".shp") ))
+ shp  <- readOGR(file.path(dataPath, paste0(shape_file_name,".shp") ))
  if(is.na( projection(shp))) projection(shp) <- CRS("+proj=longlat +datum=WGS84")   # a guess!
 
  head(shp@data)
+
+ # remove if already existing fields
+ shp@data <- shp@data[, !colnames(shp@data) %in% c("proba_cell", "feffort_tplus1")] 
 
 
  # do a raster computation (or better, compute directly on augmented shp@data...)
  # and vars among e.g. LPUE, dist2coast, OP/LPUE, GVA, spaceDepdency, etc.
  temp        <- shp@data
- if(length(vars)!=length(inverted)) stop()
  for (i in 1:length(vars)) { if(inverted[i]) shp@data[,vars[i]] <- 1/shp@data[,vars[i]] }
   
  w_cell      <- as.numeric(as.character(shp@data$feffort))
  var_cell    <- sapply(shp@data[,vars], function(x) as.numeric(as.character(x)))
  if(length(vars)==1) shp@data    <- cbind.data.frame(shp@data, proba_cell  = (w_cell*var_cell)/sum(w_cell*var_cell, na.rm=TRUE) )
- if(length(vars)>1)  shp@data    <- cbind.data.frame(shp@data, proba_cell  = (apply(w_cell*var_cell, 1, sum)/length(vars))/sum(apply(w_cell*var_cell, 1, sum)/length(vars), na.rm=TRUE) )
+ #if(length(vars)>1)  shp@data    <- cbind.data.frame(shp@data, proba_cell  = (apply(w_cell*var_cell, 1, sum)/length(vars))/sum(apply(w_cell*var_cell, 1, sum)/length(vars), na.rm=TRUE) )
  # or, alternatively:
  if(length(vars)>1)  {
             # w_cell*var1_cell/sum(w_cell*var1_cell)  *  w_cell*var2_cell/sum(w_cell*var2_cell) etc.  assuming independence
@@ -88,6 +91,7 @@
  # in SelectPolygonsToRestrictFromAugmentedShp.R as the input variable
   # export augmented shp 
  writeOGR(shp, file.path(outPath, shape_file_name_out), "SHP", driver="ESRI Shapefile")
+ writeOGR(shp, file.path(dataPath, shape_file_name_out), "SHP", driver="ESRI Shapefile") # caution: write also back to dataPath
 
  #pblm of abbreviating the field names
  # shp2  <- readOGR(file.path(outPath, shape_file_name_out))
