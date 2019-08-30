@@ -41,9 +41,12 @@
  # remove if already existing fields
  shp@data <- shp@data[, !colnames(shp@data) %in% c("proba_cell", "feffort_tplus1")] 
 
+ # replace NAs with 0s
+ for (a_var in vars) shp@data[,a_var] <- replace(shp@data[,a_var], is.na(shp@data[,a_var]), 0)
 
- # do a raster computation (or better, compute directly on augmented shp@data...)
- # and vars among e.g. LPUE, dist2coast, OP/LPUE, GVA, spaceDepdency, etc.
+
+ # compute a probability field to allocate the total effort spatially from a weigthed mean over 
+ # identified as relevant driving variables among e.g. LPUE, dist2coast, OP/LPUE, GVA, spaceDepdency, etc.
  temp        <- shp@data
  for (i in 1:length(vars)) { if(inverted[i]) shp@data[,vars[i]] <- 1/shp@data[,vars[i]] }
   
@@ -53,11 +56,23 @@
  #if(length(vars)>1)  shp@data    <- cbind.data.frame(shp@data, proba_cell  = (apply(w_cell*var_cell, 1, sum)/length(vars))/sum(apply(w_cell*var_cell, 1, sum)/length(vars), na.rm=TRUE) )
  # or, alternatively:
  if(length(vars)>1)  {
-            # w_cell*var1_cell/sum(w_cell*var1_cell)  *  w_cell*var2_cell/sum(w_cell*var2_cell) etc.  assuming independence
+            # w_cell*var1_cell/sum(w_cell*var1_cell)  *  w_cell*var2_cell/sum(w_cell*var2_cell) etc.  assuming proba independence
             shp@data    <- cbind.data.frame(shp@data, proba_cell  = apply((w_cell*var_cell) / apply(w_cell*var_cell, 2, sum, na.rm=TRUE), 1, prod) )
             shp@data$proba_cell <-  shp@data$proba_cell /sum(shp@data$proba_cell, na.rm=TRUE) # then, normalize
             }
 
+ 
+ ## TODO: alternatively some more integrated rules 
+ ## could be used here to deduce the probability 
+ ## of visiting cells along the relevant variables......
+ 
+ # remember that the curent problem with WGFBIT is that the effort displacement effect (if any) is assuming no change in catch rates for areas receiving extra effort...
+ # Hence in the weighting to deduce a probability for future effort allocation we might put more weight from the info coming from the dynamic modelling approach 
+ # (here we named "EffortForecast") which is internalizing this issue by dynamically simulating
+ # the change in catch rates along the long-term fish population dynamics and the redistribution of effort
+  
+ 
+ 
  # just for info:
  shp@data    <- cbind.data.frame(shp@data, feffort_tplus1  =  shp@data$proba_cell * sum(shp@data$feffort, na.rm=TRUE))
 
