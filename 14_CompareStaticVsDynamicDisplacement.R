@@ -1,8 +1,8 @@
 ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
 ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
 # Compare a simple rule for static effort displacement vs. 
-# effort displacement predicted by the dynamic modelling approach
- 
+# effort displacement predicted by the dynamic modelling approach,
+# then run a WGFBIT assessment from both sources 
 
 ## Developed for WKTRADE2, Aug 2019
 ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
@@ -61,10 +61,12 @@
  if(is.na( projection(shp))) projection(shp) <- CRS("+proj=longlat +datum=WGS84")   # a guess!
 
  # convert to raster
+ a_var <- "feffort"
+ #a_var <- "SAR"
  r           <- raster(xmn=bbox(shp)[1,1], xmx=bbox(shp)[1,2], ymn=bbox(shp)[2,1], ymx=bbox(shp)[2,2], res=c(grid_degrees/2, grid_degrees/2),
                              crs=CRS("+proj=longlat +datum=WGS84"))
  some_coords <- SpatialPoints(cbind(lon=shp@data$MidLon, lat=shp@data$MidLat))
- rstr        <- rasterize(x=some_coords, y=r, field=shp@data$feffort, fun=sum) 
+ rstr        <- rasterize(x=some_coords, y=r, field=shp@data[,a_var], fun=sum) 
     
  crs(rstr) <- "+proj=longlat +datum=WGS84"                
  a_crs="+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs"
@@ -85,6 +87,7 @@
  rstr_opened_static<- rstr_opened +  (sum_effort_cut /  ncell(rstr_opened)) # evenly dispatched
  rstr_opened_static<- rstr_opened +  (sum_effort_cut* rstr_opened / sum_effort_opened) # or dispatched proportional to feffort
  # TO CHECK:  not sure about which alternative WGFIT scenario-testing has used so far....
+
  
  # quick check
  par(mfrow=c(1,2))
@@ -162,4 +165,19 @@
                                 paste0(raster_file_name_out,".tif")), format = "GTiff", overwrite = TRUE)
 
  
+ 
+ 
+ # ...AND RUN THE WGBIT ASSESSEMENT:
+ 
+ ## TODO
+ # then use the rstr_opened_static or the rstr_opened_dynamic as input to (equilibrium) WGFBIT assessment, 
+ # https://github.com/ices-eg/FBIT/blob/master/Utilities/Impact_continuous_longevity.R
+ # knowing that the required metric for the raster should be Swept Area Ratio (SAR):
+ # and knowing the depletion factor is currently given per gear type but not per habitat type (for now). 
+ # Fishing event depletion proportions are derived by Hiddink et al for TBB, OT, TD, Seine as 0.14*SAR, 0.06, 0.20 and 0.06 repectively
+ 
+ 
+
+
+
 
