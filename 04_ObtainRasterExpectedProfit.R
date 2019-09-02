@@ -57,6 +57,12 @@
  # deduce a probability field for effort at t+1 as expected profit normilized to 1 
  
  
+ ##TODO:
+ ##Read in data for period 2009-2016 and look at how stable are the indicators over time....
+ ## then possibly use an average of a period of time  
+ 
+
+ 
  # FAKE EXPORT FOR NOW:
  
  # convert to raster

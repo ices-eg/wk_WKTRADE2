@@ -42,6 +42,11 @@
  ##TODO
  
  
+ ##TODO:
+ ##Read in (STECF) data for period 2009-2016 and look at how stable are the indicators over time....
+ ## then possibly use an average of a period of time  
+ 
+
 
  ## maybe start from helpful piece of code dealing with STECF AER data: 
 library(readxl)

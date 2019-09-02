@@ -172,9 +172,11 @@
  ## TODO
  # then use the rstr_opened_static or the rstr_opened_dynamic as input to (equilibrium) WGFBIT assessment, 
  # https://github.com/ices-eg/FBIT/blob/master/Utilities/Impact_continuous_longevity.R
+ # https://github.com/ices-eg/FBIT/blob/master/Utilities/Processing_assessment.R
  # knowing that the required metric for the raster should be Swept Area Ratio (SAR):
  # and knowing the depletion factor is currently given per gear type but not per habitat type (for now). 
- # Fishing event depletion proportions are derived by Hiddink et al for TBB, OT, TD, Seine as 0.14*SAR, 0.06, 0.20 and 0.06 repectively
+ # Fishing event depletion proportions are derived by data from Hiddink et al. PNAS 2017 Table S4 
+ # for TBB, OT, TD, Seine as 0.14*SAR, 0.06, 0.20 and 0.06 repectively
  
  
 

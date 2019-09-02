@@ -36,6 +36,12 @@
  #see OPFish_Workshop_05-2019_v4_final.pdf for description 
  
  
+  ##TODO:
+ ##Read in (JRC) data for period 2009-2016 and look at how stable are the indicators over time....
+ ## then possibly use an average of a period of time  
+ 
+
+ 
  # export the raster in outPath
  writeRaster(rstr, file = file.path(outPath, 
                                 paste0("06_rstr_oceanproductivityfish.tif")), format = "GTiff", overwrite = TRUE)

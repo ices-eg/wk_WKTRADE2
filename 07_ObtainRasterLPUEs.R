@@ -41,6 +41,13 @@
  shp@data$vpue <- shp@data$totvalue/shp@data$feffort 
  
  
+
+ ##TODO:
+ ##Read in (WGSFD) data for period 2009-2016 and look at how stable are the indicators over time....
+ ## then possibly use an average of a period of time  
+ 
+
+ 
  # convert to raster
  r           <- raster(xmn=bbox(shp)[1,1], xmx=bbox(shp)[1,2], ymn=bbox(shp)[2,1], ymx=bbox(shp)[2,2], res=c(grid_degrees, grid_degrees),
                              crs=CRS("+proj=longlat +datum=WGS84"))
