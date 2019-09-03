@@ -473,6 +473,8 @@ function (pnts, cols = heat.colors(100), limits = c(0, 1), title = "Legend", leg
    
    the_baseline <- "scebaseline"
    library(raster)
+   
+   #cumftime, in_relative=FALSE
    mapNodeAverageLayerFiles (dataPath, outPath, in_relative=FALSE, grid_degrees=0.1, a_type="cumftime", a_type2="", 
                              export_raster=TRUE, export_plot=TRUE, field_pos=4, the_baseline= the_baseline,
                             selected_scenarios= sces,
@@ -495,8 +497,8 @@ function (pnts, cols = heat.colors(100), limits = c(0, 1), title = "Legend", leg
                          )
 
 
-  # in relative
-   mapNodeAverageLayerFiles (dataPath, outPath, in_relative=TRUE, grid_degrees=0.1, a_type="cumftime", a_type2="", 
+   #cumftime, in_relative=TRUE
+    mapNodeAverageLayerFiles (dataPath, outPath, in_relative=TRUE, grid_degrees=0.1, a_type="cumftime", a_type2="", 
                              field_pos=4, the_baseline= the_baseline,
                             export_raster=TRUE, export_plot=TRUE, 
                             selected_scenarios= sces,
@@ -518,6 +520,52 @@ function (pnts, cols = heat.colors(100), limits = c(0, 1), title = "Legend", leg
                             legend_text1="Fish. hours per "
                          )
 
+
+  #cumsweptarea, in_relative=FALSE
+   mapNodeAverageLayerFiles (dataPath, outPath, in_relative=FALSE, grid_degrees=0.1, a_type="cumsweptarea", a_type2="", 
+                             export_raster=TRUE, export_plot=TRUE, field_pos=4, the_baseline= the_baseline,
+                            selected_scenarios= sces,
+                            namesce=sces,
+                            the_breaks_baseline=  c(0, round(exp(seq(-1.5, 3.5, by=0.3)),1), 10000), 
+                            the_breaks= c(rev(c(-round(exp(seq(0, 4, by=2))), -100)),  0, round(exp(seq(0, 7, by=2)))),
+                            gis_shape=list(
+                                 scebaseline = list(sh_coastlines), 
+                                 scerestrictionontrawling5eez= list(sh_coastlines),
+                                 scerestrictionontrawling10eez= list(sh_coastlines),
+                                 scerestrictionontrawling15eez= list(sh_coastlines),
+                                 scerestrictionontrawling20eez= list(sh_coastlines),
+                                 scerestrictionontrawling5hab= list(sh_coastlines),
+                                 scerestrictionontrawling10hab= list(sh_coastlines),
+                                 scerestrictionontrawling15hab= list(sh_coastlines),
+                                 scerestrictionontrawling20hab= list(sh_coastlines)
+                                            ),
+                            a_width= 7000, a_height =7200, xlims = c(7, 25), ylims=c(54,66), 
+                            legend_text1="Fish. hours per "
+                         )
+
+
+   #cumsweptarea, in_relative=TRUE
+    mapNodeAverageLayerFiles (dataPath, outPath, in_relative=TRUE, grid_degrees=0.1, a_type="cumsweptarea", a_type2="", 
+                             field_pos=4, the_baseline= the_baseline,
+                            export_raster=TRUE, export_plot=TRUE, 
+                            selected_scenarios= sces,
+                            namesce=sces,
+                            the_breaks_baseline=  c(0, round(exp(seq(-1.5, 3.5, by=0.3)),1), 10000), 
+                            the_breaks= c(rev(c(-round(exp(seq(0, 4, by=2))), -100)),  0, round(exp(seq(0, 7, by=2)))),
+                            gis_shape=list(
+                                 scebaseline = list(sh_coastlines), 
+                                 scerestrictionontrawling5eez= list(sh_coastlines),
+                                 scerestrictionontrawling10eez= list(sh_coastlines),
+                                 scerestrictionontrawling15eez= list(sh_coastlines),
+                                 scerestrictionontrawling20eez= list(sh_coastlines),
+                                 scerestrictionontrawling5hab= list(sh_coastlines),
+                                 scerestrictionontrawling10hab= list(sh_coastlines),
+                                 scerestrictionontrawling15hab= list(sh_coastlines),
+                                 scerestrictionontrawling20hab= list(sh_coastlines)
+                                            ),
+                            a_width= 7000, a_height =7200, xlims = c(7, 25), ylims=c(54,66), 
+                            legend_text1="Fish. hours per "
+                         )
 
 
  
