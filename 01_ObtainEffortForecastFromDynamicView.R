@@ -108,26 +108,3 @@
 
  
 
-
- # NOT USED:
- # but if we want to inform  ObtainProbabilityFieldForEffortDisplacement.R we need the dual layer
- # (the closer the value to 1, the more likely the cell to be cut...)
- #areas_to_restrict <- 1- areas_to_go_in_future
- 
- 
- #par(mfrow=c(1,2))
- #plot(normalized_rstr_current) # current
- #plot(areas_to_restrict)       # suggested restriction as a spatial weighting factor 
- 
- # Step D -  Export
- # convert to shape file
- #areas_to_restrict_shp <- rasterToPolygons(areas_to_restrict, dissolve=TRUE)
- #head(areas_to_restrict_shp@data)
-  
- # finally, export the proba field for future use 
- #writeOGR(areas_to_restrict_shp, file.path(outPath, paste0(shape_file_name_out,".shp")), "SHP", driver="ESRI Shapefile")
-
- #pblm of abbreviating the field names
- # shp2  <- readOGR(file.path(outPath, shape_file_name_out))
- # head(shp2@data)
-

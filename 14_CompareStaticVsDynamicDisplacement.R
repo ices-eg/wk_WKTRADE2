@@ -8,7 +8,7 @@
 ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
 ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
 
- mainPath    <- file.path("D:","FBA","ADVICES", "ICES_WKTRADE2") 
+ mainPath    <- file.path("D:","FBA","ADVICES", "ICES_WKTRADE2") # just adapt that path to point to repo path...
  repoPath    <- file.path(mainPath, "wk_WKTRADE2") # github repo
  polPath     <- file.path(repoPath, "WKTRADE2_Data","ShapeFiles")
  dataPath1   <- file.path(repoPath, "WKTRADE2_Data") # path to current spatial effort allocation 
@@ -27,6 +27,7 @@
  grid_degrees               <- 0.1 
  shp_file_name_closed_pol   <- "feffort_cut_per_eez_25" # ...one sce
  raster_future_effort_alloc <- "map_averaged_cumftime_5_scerestrictionontrawling20eez" # ...one sce
+ #raster_future_effort_alloc <- "map_averaged_cumsweptarea_5_scerestrictionontrawling20eez" # ...one sce
  raster_file_name_out       <- "diff_static_vs_dynamic" 
  #!!!!!!!!!!!!!!!!!!!!!!!!!#
 
@@ -36,7 +37,11 @@
  library(raster)
 
 
+ #------------------#
+ #------------------#
  # POLYGON CLOSED
+ #------------------#
+ #------------------#
  # read shape file
  shp_closed  <- readOGR(file.path(dataPath2, paste0(shp_file_name_closed_pol, ".shp") ))
  if(is.na( projection(shp_closed))) projection(shp_closed) <- CRS("+proj=longlat +datum=WGS84")   # a guess!
@@ -54,7 +59,11 @@
  
 
  
+ #------------------#
+ #------------------#
  # CURRENT EFFORT
+ #------------------#
+ #------------------#
  #read shape file for the current fishing effort spatial allocation
  a_shape_file_name     <- file.path(dataPath1, "ShapeFiles", "WGSFD", paste0(shape_file_name, ".shp"))
  shp  <- readOGR(a_shape_file_name)
@@ -72,10 +81,9 @@
  a_crs="+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs"
  rstr_current       <- projectRaster(rstr, crs=a_crs)  # e.g. European EEA projection
  
+  
  
- 
- 
- # DISPLACE EFFORT ON A STATIC VIEW
+ # DISPLACE EFFORT FROM A STATIC VIEW 
  rstr_closed       <- mask(x = rstr_current, mask = shp_closed)
  rstr_closed[is.na(rstr_closed)]   <- 0
  rstr_current[is.na(rstr_current)] <- 0
@@ -88,7 +96,17 @@
  rstr_opened_static<- rstr_opened +  (sum_effort_cut* rstr_opened / sum_effort_opened) # or dispatched proportional to feffort
  # TO CHECK:  not sure about which alternative WGFIT scenario-testing has used so far....
 
+
+ # convert to shape file for use in WGFBIT and add c-sqaure info to make the link
+ rstr <- projectRaster(rstr_opened_static, crs="+proj=longlat +datum=WGS84")  # e.g. European EEA projection
+ shp_opened_static <- rasterToPolygons(rstr, dissolve=TRUE)
+ head(shp_opened_static@data)
+ shp_opened_static@data <- cbind.data.frame(shp_opened_static@data, 
+                       vmstools::CSquare(coordinates(shp_opened_static)[,1], coordinates(shp_opened_static)[,2],
+                        degrees=0.1)) 
  
+ 
+
  # quick check
  par(mfrow=c(1,2))
  plot(rstr_current)
@@ -96,13 +114,18 @@
  
  
  
+ #------------------#
+ #------------------#
  # FUTURE EFFORT FROM THE DYNAMIC MODELLING APPROACH
+ #------------------#
+ #------------------#
+
  # DISPLACE_outputs giving per scenario the average cumulated fishing effort distribution after 5y runs
  # see the CRS in mapNodeAverageLayerFiles.r
  # but likely to be:  a_crs="+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs"
        
  # read raster with data to be extracted
- rstr_future <- raster(file.path(dataPath2, paste0(raster_future_effort_alloc, ".tif") ))
+ rstr_future <- raster(file.path(dataPath2, paste0(raster_future_effort_alloc, ".tif") ))   # should be feffort or SAR (caution: the WGFBIT assessment use SAR)
  rstr_future[1:2]
  rstr_future[1:3,1:3, drop=FALSE]
 
@@ -113,10 +136,27 @@
  # get rid of irrelevant cells
  rstr_opened_dynamic <- rstr_future[rstr_future>1 & rstr_future<summary(rstr_future)["Max.",], drop=FALSE]
 
+ # convert to shape file for use in WGFBIT
+ shp_opened_dynamic <- rasterToPolygons(rstr_opened_dynamic, dissolve=TRUE)
+ head(shp_opened_dynamic@data)
+ 
+  # convert to shape file for use in WGFBIT and add c-sqaure info to make the link
+ rstr <- projectRaster(rstr_opened_dynamic, crs="+proj=longlat +datum=WGS84")  # e.g. European EEA projection
+ shp_opened_dynamic <- rasterToPolygons(rstr, dissolve=TRUE)
+ head(shp_opened_dynamic@data)
+ shp_opened_dynamic@data <- cbind.data.frame(shp_opened_dynamic@data, 
+                       vmstools::CSquare(coordinates(shp_opened_dynamic)[,1], coordinates(shp_opened_dynamic)[,2],
+                        degrees=0.1)) 
  
  
  
+ 
+ #------------------#
+ #------------------#
+ #------------------#
  # DO THE DIFFERENCE
+ #------------------#
+ #------------------#
  
  # crop the larger dynamic rstr with the static rstr
  rstr_opened_dynamic <- crop(rstr_opened_dynamic, rstr_opened_static)
@@ -148,7 +188,7 @@
  # a plot
  tiff(filename=file.path(outPath, paste0("diff_static_dynamic",".tif")),   width = 4000, height = 3000,
                                    units = "px", pointsize = 12,  res=600, compression = c("lzw"))
-  par(mfrow=c(1,1))
+ par(mfrow=c(1,1))
  diverging_cols <- c('#543005','#8c510a','#bf812d','#dfc27d','#f6e8c3','#f5f5f5','#c7eae5','#80cdc1','#35978f','#01665e','#003c30')
  plot(diff_static_minus_dynamic, asp=1.6, col=diverging_cols)
  library(maptools)
@@ -167,18 +207,109 @@
  
  
  
- # ...AND RUN THE WGBIT ASSESSEMENT:
- 
+ #------------------#
+ #------------------#
+ # ...AND EVENTUALLY RUN THE WGBIT ASSESSEMENT:
+ #------------------#
+ #------------------#
+
  ## TODO
  # then use the rstr_opened_static or the rstr_opened_dynamic as input to (equilibrium) WGFBIT assessment, 
  # https://github.com/ices-eg/FBIT/blob/master/Utilities/Impact_continuous_longevity.R
  # https://github.com/ices-eg/FBIT/blob/master/Utilities/Processing_assessment.R
- # knowing that the required metric for the raster should be Swept Area Ratio (SAR):
+ # knowing that the required metric for the data should be Swept Area Ratio (SAR):
  # and knowing the depletion factor is currently given per gear type but not per habitat type (for now). 
  # Fishing event depletion proportions are derived by data from Hiddink et al. PNAS 2017 Table S4 
  # for TBB, OT, TD, Seine as 0.14*SAR, 0.06, 0.20 and 0.06 repectively
  
  
+# e.g. adapt the following extracted from https://github.com/ices-eg/FBIT/blob/master/Utilities/Processing_assessment.R
+
+################
+# Figure A.12
+################
+
+  Region  <-  # TODO: TO BE RETRIEVED (ASK DANIEL)....
+  year <- AssYear
+  
+
+  # impact is not calculated from the continuous longevity (takes a lot of time to do it for all the different scenarios)
+  A12dat <- subset(Region@data,Region@data$Depth >= -200 & Region@data$Depth < 0)
+  
+  
+  SAR_static     <- shp_opened_static   ## Prblm...we need SAR, not feffort
+  SAR_dynamic    <- shp_opened_dynamic
+  
+  A12dat <- cbind(A12dat,SAR_static@data[match(A12dat$squares,SAR_static@data$c_square),c("SurfaceSAR")])
+  colnames(A12dat)[ncol(A12dat)]<-"static_SSAR"
+  A12dat <- cbind(A12dat,SAR_dynamic@data[match(A12dat$squares,SAR_dynamic@data$c_square),c("SurfaceSAR")])
+  colnames(A12dat)[ncol(A12dat)]<-"dynamic_SSAR"
+  
+  state_ampl_static <- c()
+  ccname_static <- c()
+  state_ampl_dynamic <- c()
+  ccname_dynamic <- c()
+  amplifier <- c(4, 2, 1.25, 1, 0.75, 0.50, 0.25)
+  
+  # recovery following Hiddink et al. J Applied Ecol. 2018
+  rzerone <- 5.31/1
+  ronethree <- 5.31/2
+  rthreeten <- 5.31/6.5
+  rten <- 5.31/10
+  Recov <- c(rzerone,ronethree,rthreeten,rten)
+  
+  for (j in 1: length(amplifier)){
+    
+    ### calculate fractions of biomass per longevity class 
+    zerone<-A12dat$Lone                      #### fraction of biomass with longevity 0-1
+    onethree<-A12dat$Lthree-zerone           #### fraction of biomass with longevity 1-3
+    threeten<-A12dat$Lten-(onethree+zerone)  #### fraction of biomass with longevity 3-10
+    tenmore<- 1-(threeten+onethree+zerone)   #### fraction of biomass with longevity > 10
+    
+    ### calculate depletion per gear group following Hiddink et al. and include the amplifier
+    Depl_static   <- 0.06 * A12dat$static_SSAR * amplifier[j]     ### data from Hiddink et al. PNAS 2017 Table S4  - HERE FOR OTB
+    Depl_dynamic   <- 0.06 * A12dat$dynamic_SSAR * amplifier[j]     ### data from Hiddink et al. PNAS 2017 Table S4   - HERE FOR OTB
+    
+    
+    # STATIC - calculate state for the whole community
+    frac_bio <- cbind(zerone,onethree,threeten,tenmore)
+
+    dat <-as.data.frame(matrix(data=NA,nrow=nrow(A12dat)))
+    for(i in 1:4){
+      dat[,i]<-(frac_bio[,i]*(1-Depl_static/Recov[i]))
+    }  
+    dat[dat<0] <- 0
+    state_static <- rowSums(dat)
+    state_ampl_static <- cbind(state_ampl,state_static)
+    ccname_static <- c(ccname_static,paste("state_static",amplifier[j],sep="_"))
+  
+    # DYNAMIC -calculate state for the whole community
+    frac_bio <- cbind(zerone,onethree,threeten,tenmore)
+
+    dat <-as.data.frame(matrix(data=NA,nrow=nrow(A12dat)))
+    for(i in 1:4){
+      dat[,i]<-(frac_bio[,i]*(1-Depl_dynamic/Recov[i]))
+    }  
+    dat[dat<0] <- 0
+    state_dynamic <- rowSums(dat)
+    state_ampl_dynamic <- cbind(state_ampl,state_dynamic)
+    ccname_dynamic <- c(ccname_dynamic,paste("state_dynamic_",amplifier[j],sep="_"))
+  
+  
+  }
+  
+  
+  
+  state_ampl_static[,1:7][is.na(state_ampl_static[,1:7]) & A12dat$Depth >= -200 & A12dat$Depth < 0] <- 1
+  test <- apply(state_ampl_static,2,sort,decreasing=F)
+  state_ampl_static<-as.data.frame(test)
+  colnames(state_ampl_static) <- ccname_static 
+
+  state_ampl_static$footprop <- 1-(1:nrow(state_ampl_static))/nrow(state_ampl_static)
+  
+  A12fig <- state_ampl_static
+  
+  save(A12fig, file="FigureA12.RData")
 
 
 
