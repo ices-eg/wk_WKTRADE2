@@ -3,6 +3,7 @@
  ## Build a "distance to coast" raster file
  
  ## Developed for WKTRADE2, Aug 2019
+ ## Francois Bastardie
 
  # inspired by https://dominicroye.github.io/en/2019/calculating-the-distance-to-the-sea-in-r/
  ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##

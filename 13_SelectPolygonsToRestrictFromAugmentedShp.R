@@ -4,6 +4,7 @@
 ## e.g. thresholds on historical catch volume, feffort, lpues etc.
 
 ## Developed for WKTRADE2, Aug 2019
+## Francois Bastardie
 ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
 ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
 

@@ -2,8 +2,7 @@
  ## Build a "Spatial dependencies index" raster file
  
  ## Developed for WKTRADE2, Aug 2019
-
- # Bastardie et al 2014
+ ## Francois Bastardie 
  ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
  ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
  

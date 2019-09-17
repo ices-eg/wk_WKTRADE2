@@ -1,0 +1,49 @@
+GERAET;FISHING_TECH;LEVEL_1_GEAR;FISHING_TECH_DECODE;CATEGORY
+PTM;TM;Mobile gears;Pelagic trawlers;Trawls
+LLD;HOK;Passive gears;Vessels using hooks;Hooks
+OTT;DTS;Mobile gears;Demersal trawlers and/or demersal seiners;Multirig
+SPR;PS;Mobile gears;Demersal trawlers and/or demersal seiners;Trawls
+MGP;MGP;Mobile gears;Vessels using polyvalent active gears only;Other 
+OTG;MGO;Mobile gears;Vessel using other active gears;Other 
+LLS;HOK;Passive gears;Vessels using hooks;Hooks
+GNS;DFN;Passive gears;Drift and/or fixed netters;Nets
+PMP;PMP;Polyvalent gears; Vessels using active and passive gears;Other 
+PTB;DTS;Mobile gears;Demersal trawlers and/or demersal seiners;Trawls
+LH;HOK;Passive gears;Vessels using hooks;Hooks
+BTF;FPO;Passive gears;Vessels using pots and/or traps;Traps
+FPO;FPO;Passive gears;Vessels using pots and/or traps;Traps
+TBB;TBB;Mobile gears;Beam trawlers;Trawls
+CTB;DTS;Mobile gears;Demersal trawlers and/or demersal seiners;Trawls
+LHP;HOK;Passive gears;Vessels using hooks;Hooks
+OFG;PGO;Passive gears;Vessels using other passive gears;Other 
+SSC;DTS;Mobile gears;Demersal trawlers and/or demersal seiners;Trawls
+GN;DFN;Passive gears;Drift and/or fixed netters;Nets
+FWR;FPO;Passive gears;Vessels using pots and/or traps;Traps
+PG;PGO;Passive gears;Vessels using other passive gears;Other 
+PVG;PMP;Polyvalent gears; Vessels using active and passive gears;Other 
+SDN;DTS;Mobile gears;Demersal trawlers and/or demersal seiners;Trawls
+OTM;TM;Mobile gears;Pelagic trawlers;Trawls
+PS;PS;Mobile gears;Purse seiners;Purse seiners
+INAKTIV;INACTIVE;Non active vessels;Non active vessels;Non activ
+SB;DTS;Mobile gears;Demersal trawlers and/or demersal seiners;
+LL;HOK;Passive gears;Vessels using hooks;Hooks
+GTR;DFN;Passive gears;Drift and/or fixed netters;Nets
+GND;DFN;Passive gears;Drift and/or fixed netters;Nets
+FYK;FPO;Passive gears;Vessels using pots and/or traps;Traps
+MIS;PGO;Passive gears;Vessels using other passive gears;Other 
+OTB;DTS;Mobile gears;Demersal trawlers and/or demersal seiners;Trawls
+DRB;DRB;Mobile gears;Dredgers;Dredges
+FPN;FPO;Passive gears;Uncovered fixed pound nets;Traps
+LTL;HOK;Passive gears;Vessels using hooks;Hooks
+TB;TBB;Mobile gears;Beam trawlers;Trawls
+GNC;DFN;Passive gears;Drift and/or fixed netters;Nets
+PS1;PS;Mobile gears;Purse seiners;Purse seiners
+PS2;PS;Mobile gears;Purse seiners;Purse seiners
+TBS;TBB;Mobile gears;Beam trawlers;Trawls
+TMS;TBB;Mobile gears;Beam trawlers;Trawls
+SV;PS;Mobile gears;Purse seiners;Purse seiners
+HMD;DRB;Mobile gears;Dredgers;Dredges
+TBN;TBB;Mobile gears;Beam trawlers;Trawls
+LHM;HOK;Passive gears;Vessels using hooks;Hooks
+TM;TM;Mobile gears;Pelagic trawlers;Trawls
+GTN;DFN;Passive gears;Drift and/or fixed netters;Nets
