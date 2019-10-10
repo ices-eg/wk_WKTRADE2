@@ -1,10 +1,22 @@
 ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
  ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
- ## Retrieve an expected profit on spatial zones based on various assumptions
-  ## then get raster files
+ ## GOAL: COST SPATIAL DISAGREGATION coupling publically available STECF database with ICES VMS data
+ ## to ultimately be able to retrieve contribution margin as income from landings - minus operating costs
+ ## as raster files
  
  ## Developed for WKTRADE2, Aug 2019
  ## Erik Sulanke, Oisin Callery & Francois Bastardie
+ 
+ ## Target: the AER cost structure disaggregated per fleet-segment (or métier) per c-square   
+
+ ## STECF INPUT DATA: AER Cost ratio data per fleet-segment 
+ ## STECF INPUT DATA: AER Effort per fleet-segment per FAO subregion 
+ ## COMPUTED HERE: Effort share per fs per subregion (obtained from total AER effort per fs * fs_share_effort from prop of effort in the subregion)
+ ## COMPUTED HERE: AER cost ratio data per fs per subregion
+ ## TODO: (the missing link for now: FDI effort per fs (or best per métier) per ICES rectangle…so what is exactly needed is a share over ICES rectangles of total fs effort per subarea…Cannot this table be directly deduced from VMS data) 
+ ## ICES INPUT DATA: VMS effort per métier level 6 per c-square
+ ## COMPUTED HERE: coupling to obtain VMS cost structure per métier level 6/fs per c-square as VMS effort times cost ratios
+ 
 
  ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
  ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
@@ -389,6 +401,9 @@ crs(rstr_landingvalue) <- "+proj=longlat +datum=WGS84"
 # compute a margin contribution
 rstr_margincontribution <- rstr_landingvalue - rstr_energycost
 
+# check
+plot((rstr_energycost/cellStats(rstr_energycost, "max"))-((rstr_effort/cellStats(rstr_effort, "max"))))
+
 # PLOTS
 par(mfrow=c(2,2))
 #plot(rstr_effort/cellStats(rstr_effort, "max"))
@@ -417,6 +432,9 @@ title("Energy cost")
 rst_totcost_contr <- rstr_totcost/cellStats(rstr_totcost, "sum")
 plot(rst_totcost_contr/cellStats(rst_totcost_contr, "max"))
 title("Total cost")
+
+# check
+plot((rst_energyc_contr/cellStats(rst_energyc_contr, "max"))-((rst_eff_contr/cellStats(rst_eff_contr, "max"))))
 
  
 # export the layer and use in AddAttributeToShpFromRasterExtractorFromShpOverlay.R
