@@ -13,11 +13,14 @@
  ## STECF INPUT DATA: AER Effort per fleet-segment per FAO subregion 
  ## COMPUTED HERE: Effort share per fs per subregion (obtained from total AER effort per fs * fs_share_effort from prop of effort in the subregion)
  ## COMPUTED HERE: AER cost ratio data per fs per subregion
- ## TODO: (the missing link for now: FDI effort per fs (or best per métier) per ICES rectangle…so what is exactly needed is a share over ICES rectangles of total fs effort per subarea…Cannot this table be directly deduced from VMS data) 
+ ## TODO: (the missing link for now: FDI effort per fs (or best per métier) per ICES rectangle…so what is exactly needed is a share over ICES rectangles of total fs effort per subarea…Cannot this table be directly deduced from VMS data with the stecf fs naming?) 
  ## ICES INPUT DATA: VMS effort per métier level 6 per c-square
+ ## IMPORTANT: CURRENT PROBLEM WITH VMS DATA: empty landings values and inconsistent vessel szie category...
+ ## so the coupling is only done on Fish Tech and not on fs for now which is bad
  ## COMPUTED HERE: coupling to obtain VMS cost structure per métier level 6/fs per c-square as VMS effort times cost ratios
  
-
+ ## 10-10-2019: PROBLEM: COST STRUCTURE ONLY PER SUB-REGION AND COUPLING TO VMS PER FISH TECH ONLY I.E. NOT PER AER FLEET-SEGMENT
+ 
  ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
  ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##
 
