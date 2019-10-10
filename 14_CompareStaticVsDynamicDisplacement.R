@@ -230,12 +230,14 @@
 # Figure A.12
 ################
 
-  Region  <-  # TODO: TO BE RETRIEVED (ASK DANIEL)....
+  #https://github.com/Dvandenderen/Baltic-benthic-status/tree/master/Processed%20data
+  load(file=file.path(dataPath1, "WGFBIT", "balticgrid_state.RData")) # get the balticgrid
+  Region  <-  balticgrid 
   year <- AssYear
   
 
   # impact is not calculated from the continuous longevity (takes a lot of time to do it for all the different scenarios)
-  A12dat <- subset(Region@data,Region@data$Depth >= -200 & Region@data$Depth < 0)
+  A12dat <- subset(Region@data,Region@data$depth >= -200 & Region@data$depth < 0)
   
   
   SAR_static     <- shp_opened_static   ## Prblm...we need SAR, not feffort

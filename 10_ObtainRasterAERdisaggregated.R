@@ -20,7 +20,7 @@ library("lme4")
 library("scales")
 
 my_path_to_vms_data <- file.path("D:","FBA","ADVICES","ICES_WKTRADE2","WGSFD","wktrade2_vms") # ICES vms data cannot be shared without permission.
-my_path_to_oth_data <- file.path("D:","FBA","ADVICES","ICES_WKTRADE2","WKTRADE2_Data", "STECF")
+my_path_to_oth_data <- file.path("D:","FBA","ADVICES","ICES_WKTRADE2","wk_WKTRADE2", "WKTRADE2_Data", "STECF")
 
 #### Reading and wrangling VMS Data ####
 rawdata <- read.csv(file.path(my_path_to_vms_data,"vmsagg.txt"), header = T,sep = ",", stringsAsFactors = F)
@@ -128,7 +128,8 @@ value_per_csquareandsubarea_NS_2016 <- ungroup(value_per_csquareandsubarea_NS_20
 head(as.data.frame(value_per_csquareandsubarea_NS_2016))
 
 ###Reading AER value data ####
-stecf_fleetdata <- read.csv(file=file.path(my_path_to_oth_data, "STECF_EU_Fleet_Landings_FS-Level.csv"), sep = ";", dec = ",")
+#stecf_fleetdata <- read.csv(file=file.path(my_path_to_oth_data, "STECF_EU_Fleet_Landings_FS-Level.csv"), sep = ";", dec = ",") ## TOO BIG FOR GITHUB!
+stecf_fleetdata <- read.csv(file=file.path("D:","FBA","ADVICES","ICES_WKTRADE2", "STECF_EU_Fleet_Landings_FS-Level","STECF_EU_Fleet_Landings_FS-Level.csv"), sep = ";", dec = ",")
 stecf_fleetdata <- stecf_fleetdata[,c(2,4:7,9:14,16:20,27)]
 str(stecf_fleetdata)
 stecf_fleetdata$year <- as.character(stecf_fleetdata$year)
@@ -177,6 +178,17 @@ stecf_fleetdata_effort_kwHoursfishing <- left_join(stecf_fleetdata_effort_kwHour
 # Aproximation: (Fishing days/days at sea * kW hours at Sea)/1000 
 stecf_fleetdata_effort_kwHoursfishing$mw_fishinghours <- (stecf_fleetdata_effort_kwHoursfishing$fishingdays/stecf_fleetdata_effort_kwHoursfishing$daysatsea*
                                                            stecf_fleetdata_effort_kwHoursfishing$kwHoursSea)/1000                       
+table(is.na(stecf_fleetdata_effort_kwHoursfishing$mw_fishinghours))
+
+## !!!! CAUTION !!!!!
+## !!!! CAUTION !!!!!
+## !!!! CAUTION !!!!!
+## TRYING TO WORKAROUND THE BAD FISHING DAYS FIELD HAVING A LOT OF NAs
+#stecf_fleetdata_effort_kwHoursfishing$mw_fishinghours <- stecf_fleetdata_effort_kwHoursfishing$daysatsea/24*0.5                    
+## !!!! CAUTION !!!!!
+## !!!! CAUTION !!!!!
+## !!!! CAUTION !!!!!
+
 
 #Refine dataframe to relevant variables
 stecf_fleetdata_effort_kwHoursfishing <- stecf_fleetdata_effort_kwHoursfishing[,c(1,2,4,5,8,11)]
@@ -190,7 +202,7 @@ stecf_fleetdata_2016_with_kiloandeffort_fslevel <- stecf_fleetdata_2016_with_kil
   group_by(country_code,fishing_tech,vessel_length,sub_reg)%>%
   mutate(AER_sumvalue_subreg = sum(value))%>% # sum of value
   mutate(AER_sumweight_subreg = sum(weight))%>% #sum of weight
-  mutate(AER_sumeffort_subreg = sum(mw_fishinghours, na.rm = F)) # sum of effort (no NA remove to avoid underestimation of effort sum)
+  mutate(AER_sumeffort_subreg = sum(mw_fishinghours, na.rm = FALSE)) # sum of effort (no NA remove to avoid underestimation of effort sum)
 
 
 
@@ -201,7 +213,7 @@ stecf_fleetdata_2016_with_kiloandeffort_fslevel <- stecf_fleetdata_2016_with_kil
 
 
 
-#refinde dataframe to relevant information
+#refine dataframe to relevant information
 stecf_fleetdata_2016_with_kiloandeffort_fslevel <- stecf_fleetdata_2016_with_kiloandeffort_fslevel[,c(1,4,5,7,16:18)]
 stecf_fleetdata_2016_with_kiloandeffort_fslevel <- unique(stecf_fleetdata_2016_with_kiloandeffort_fslevel)
 
@@ -210,7 +222,7 @@ stecf_fleetdata_2016_with_kiloandeffort_fslevel <- stecf_fleetdata_2016_with_kil
   group_by(fishing_tech, sub_reg)%>%
   mutate(fs_share_value = AER_sumvalue_subreg/sum(AER_sumvalue_subreg))%>% #share of fleet segment on total value landed by fishing tech
   mutate(fs_share_weight = AER_sumweight_subreg/sum(AER_sumweight_subreg))%>% #share of fleet segment on total weight by fishing tech
-  mutate(fs_share_effort = AER_sumeffort_subreg/sum(AER_sumeffort_subreg))#share of fleet segment on total effort by fishing tech
+  mutate(fs_share_effort = AER_sumeffort_subreg/sum(AER_sumeffort_subreg, na.rm=TRUE))#share of fleet segment on total effort by fishing tech
 
 ### reading AER costratios ####
 AER_costratios <- read.csv(file=file.path(my_path_to_oth_data, "AER_Costratios.csv"),sep = ";",dec = ",")
@@ -318,6 +330,12 @@ fleetsegment_valueandweight_per_csquareandsubarea_NS_2016$calculated_repaircost 
 fleetsegment_valueandweight_per_csquareandsubarea_NS_2016$calculated_variabelcost <- (fleetsegment_valueandweight_per_csquareandsubarea_NS_2016$effort_recalculated*1000/24)*
   fleetsegment_valueandweight_per_csquareandsubarea_NS_2016$varbykwfishday
 
+
+#check
+head(as.data.frame(fleetsegment_valueandweight_per_csquareandsubarea_NS_2016))
+table(is.na(fleetsegment_valueandweight_per_csquareandsubarea_NS_2016$effort_recalculated))   # are there NAs?
+
+
 ####Creating the rasterframe and reducing to relevant information
 rasterframe <- fleetsegment_valueandweight_per_csquareandsubarea_NS_2016[,c(1:4,8:9,20:26)]
 rasterframe <- rasterframe[,c(1,3,4,2,5:13)]
@@ -356,18 +374,49 @@ rangey <- range(rasterframe$SI_LATI)
 r           <- raster(xmn=rangex[1], xmx=rangex[2], ymn=rangey[1], ymx=rangey[2], res=c(0.1, 0.1),
                              crs=CRS("+proj=longlat +datum=WGS84"))
 some_coords <- SpatialPoints(cbind(lon=rasterframe$SI_LONG, lat=rasterframe$SI_LATI))
-rstr_totcost        <- rasterize(x=some_coords, y=r, field=rasterframe$calculated_totalcost, fun=sum) 
+rstr_totcost        <- rasterize(x=some_coords, y=r, field=quantile(rasterframe$calculated_totalcost, prob=seq(0,1,by=0.1), na.rm=TRUE), fun=sum) 
 crs(rstr_totcost) <- "+proj=longlat +datum=WGS84"                
-rstr_energycost        <- rasterize(x=some_coords, y=r, field=rasterframe$calculated_energycost, fun=sum) 
+rstr_energycost        <- rasterize(x=some_coords, y=r, field=quantile(rasterframe$calculated_energycost, prob=seq(0,1,by=0.1), na.rm=TRUE), fun=sum) 
 crs(rstr_energycost) <- "+proj=longlat +datum=WGS84"                
+rstr_effort        <- rasterize(x=some_coords, y=r, field=quantile(rasterframe$effort_recalculated, prob=seq(0,1,by=0.1), na.rm=TRUE), fun=sum) 
+crs(rstr_effort) <- "+proj=longlat +datum=WGS84"                
+rstr_landingvalue        <- rasterize(x=some_coords, y=r, field=quantile(rasterframe$value_recalculated, prob=seq(0,1,by=0.1), na.rm=TRUE), fun=sum) 
+crs(rstr_landingvalue) <- "+proj=longlat +datum=WGS84"                
 
-plot(rstr_totcost)
-plot(rstr_energycost)
+par(mfrow=c(2,2))
+plot(rstr_effort/cellStats(rstr_effort, "max"))
+title("Effort")
+plot(rstr_landingvalue/cellStats(rstr_landingvalue, "max"))
+title("Value")
+plot(rstr_energycost/cellStats(rstr_energycost, "max"))
+title("Energy cost")
+plot(rstr_totcost/cellStats(rstr_totcost, "max"))
+title("Total cost")
+
+par(mfrow=c(2,2))
+rst_eff_contr <- rstr_effort/cellStats(rstr_effort, "sum")
+plot(rst_eff_contr/cellStats(rst_eff_contr, "max"))
+title("Effort")
+rst_landv_contr <- rstr_landingvalue/cellStats(rstr_landingvalue, "sum")
+plot(rst_landv_contr/cellStats(rst_landv_contr, "max"))
+title("Landing Value")
+rst_energyc_contr <- rstr_energycost/cellStats(rstr_energycost, "sum")
+plot(rst_energyc_contr/cellStats(rst_energyc_contr, "max"))
+title("Energy cost")
+rst_totcost_contr <- rstr_totcost/cellStats(rstr_totcost, "sum")
+plot(rst_totcost_contr/cellStats(rst_totcost_contr, "max"))
+title("Total cost")
 
  
 # export the layer and use in AddAttributeToShpFromRasterExtractorFromShpOverlay.R
 writeRaster(rstr_energycost, file = file.path(outPath, 
                                 paste0("10_rstr_energycost.tif")), format = "GTiff", overwrite = TRUE)
+# export the layer and use in AddAttributeToShpFromRasterExtractorFromShpOverlay.R
+writeRaster(rstr_totcost, file = file.path(outPath, 
+                                paste0("10_rstr_totcost.tif")), format = "GTiff", overwrite = TRUE)
+# export the layer and use in AddAttributeToShpFromRasterExtractorFromShpOverlay.R
+writeRaster(rstr_effort, file = file.path(outPath, 
+                                paste0("10_rstr_effort.tif")), format = "GTiff", overwrite = TRUE)
 
 
 
