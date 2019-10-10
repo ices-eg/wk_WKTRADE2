@@ -371,27 +371,38 @@ rangex <- range(rasterframe$SI_LONG)
 rangey <- range(rasterframe$SI_LATI)                                                  
  
  
-r           <- raster(xmn=rangex[1], xmx=rangex[2], ymn=rangey[1], ymx=rangey[2], res=c(0.1, 0.1),
+r           <- raster(xmn=rangex[1], xmx=rangex[2], ymn=rangey[1], ymx=rangey[2], res=c(0.0501, 0.0501),
                              crs=CRS("+proj=longlat +datum=WGS84"))
 some_coords <- SpatialPoints(cbind(lon=rasterframe$SI_LONG, lat=rasterframe$SI_LATI))
 rstr_totcost        <- rasterize(x=some_coords, y=r, field=quantile(rasterframe$calculated_totalcost, prob=seq(0,1,by=0.1), na.rm=TRUE), fun=sum) 
 crs(rstr_totcost) <- "+proj=longlat +datum=WGS84"                
 rstr_energycost        <- rasterize(x=some_coords, y=r, field=quantile(rasterframe$calculated_energycost, prob=seq(0,1,by=0.1), na.rm=TRUE), fun=sum) 
 crs(rstr_energycost) <- "+proj=longlat +datum=WGS84"                
-rstr_effort        <- rasterize(x=some_coords, y=r, field=quantile(rasterframe$effort_recalculated, prob=seq(0,1,by=0.1), na.rm=TRUE), fun=sum) 
+#rstr_effort        <- rasterize(x=some_coords, y=r, field=quantile(rasterframe$effort_recalculated, prob=seq(0,1,by=0.1), na.rm=TRUE), fun=sum) 
+#crs(rstr_effort) <- "+proj=longlat +datum=WGS84"                
+rstr_effort        <- rasterize(x=some_coords, y=r, field=quantile(value_per_csquareandsubarea_NS_2016$csquare_sum_fishinghours, prob=seq(0,1,by=0.1), na.rm=TRUE), fun=sum) 
 crs(rstr_effort) <- "+proj=longlat +datum=WGS84"                
 rstr_landingvalue        <- rasterize(x=some_coords, y=r, field=quantile(rasterframe$value_recalculated, prob=seq(0,1,by=0.1), na.rm=TRUE), fun=sum) 
 crs(rstr_landingvalue) <- "+proj=longlat +datum=WGS84"                
 
+
+# compute a margin contribution
+rstr_margincontribution <- rstr_landingvalue - rstr_energycost
+
+# PLOTS
 par(mfrow=c(2,2))
-plot(rstr_effort/cellStats(rstr_effort, "max"))
-title("Effort")
+#plot(rstr_effort/cellStats(rstr_effort, "max"))
+#title("Effort")
 plot(rstr_landingvalue/cellStats(rstr_landingvalue, "max"))
 title("Value")
 plot(rstr_energycost/cellStats(rstr_energycost, "max"))
 title("Energy cost")
 plot(rstr_totcost/cellStats(rstr_totcost, "max"))
 title("Total cost")
+plot(rstr_margincontribution/cellStats(rstr_margincontribution, "max"))
+title("Margin Contribution")
+savePlot(file.path(outPath, paste0("10_rstrs.png")), type="png")
+
 
 par(mfrow=c(2,2))
 rst_eff_contr <- rstr_effort/cellStats(rstr_effort, "sum")
