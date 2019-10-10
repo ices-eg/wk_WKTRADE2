@@ -110,7 +110,7 @@ names(rawdataNS2016_withgearsandregions)[21]<-"sub_reg"
 rawdataNS2016_withgearsandregions <- rawdataNS2016_withgearsandregions[!is.na(rawdataNS2016_withgearsandregions$fishing_tech),]
 rawdataNS2016_withgearsandregions <- rawdataNS2016_withgearsandregions[!is.na(rawdataNS2016_withgearsandregions$sub_reg),]
 
-#grouping and calculating
+#grouping and calculating ### TODO: DO BETTER THAN A GROUPING PER FISH_TECH: DO PER AER FLEET-SEGMENT!!!!
 value_per_csquare_NS_2016 <- rawdataNS2016_withgearsandregions %>%
   group_by(c_square, fishing_tech) %>% #grouping
   mutate(csquare_sum_fishinghours = sum(mw_fishinghours)) %>% # sum of effort
